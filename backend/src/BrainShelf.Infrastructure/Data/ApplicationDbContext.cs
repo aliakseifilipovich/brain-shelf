@@ -16,6 +16,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Entry> Entries => Set<Entry>();
     public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<Metadata> Metadata => Set<Metadata>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +49,10 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Property(e => e.UpdatedAt).IsRequired();
 
+            // Create indexes for searchable fields
+            entity.HasIndex(e => e.Title);
+            entity.HasIndex(e => e.Content);
+            
             entity.HasMany(e => e.Tags)
                   .WithMany(t => t.Entries)
                   .UsingEntity(j => j.ToTable("EntryTags"));
@@ -61,7 +66,29 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Property(e => e.UpdatedAt).IsRequired();
 
+            // Create index for tag name for efficient searching
             entity.HasIndex(e => e.Name).IsUnique();
+        });
+
+        // Configure Metadata entity
+        modelBuilder.Entity<Metadata>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.PageTitle).HasMaxLength(500);
+            entity.Property(e => e.MetaDescription).HasMaxLength(2000);
+            entity.Property(e => e.Keywords).HasMaxLength(1000);
+            entity.Property(e => e.PreviewImageUrl).HasMaxLength(2000);
+            entity.Property(e => e.ExtractedAt).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+
+            entity.HasOne(e => e.Entry)
+                  .WithOne(e => e.Metadata)
+                  .HasForeignKey<Metadata>(e => e.EntryId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Create index on EntryId for efficient lookups
+            entity.HasIndex(e => e.EntryId).IsUnique();
         });
     }
 
