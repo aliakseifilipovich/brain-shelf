@@ -35,6 +35,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Register application services
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IEntryService, EntryService>();
 
 // Configure database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
