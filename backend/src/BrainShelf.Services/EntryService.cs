@@ -12,10 +12,12 @@ namespace BrainShelf.Services;
 public class EntryService : IEntryService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMetadataExtractionService _metadataExtractionService;
 
-    public EntryService(ApplicationDbContext context)
+    public EntryService(ApplicationDbContext context, IMetadataExtractionService metadataExtractionService)
     {
         _context = context;
+        _metadataExtractionService = metadataExtractionService;
     }
 
     public async Task<(IEnumerable<Entry> Entries, int TotalCount)> GetAllAsync(
@@ -33,6 +35,7 @@ public class EntryService : IEntryService
         var query = _context.Entries
             .Include(e => e.Project)
             .Include(e => e.Tags)
+            .Include(e => e.Metadata)
             .AsQueryable();
 
         // Apply projectId filter
@@ -77,6 +80,7 @@ public class EntryService : IEntryService
         var query = _context.Entries
             .Include(e => e.Project)
             .Include(e => e.Tags)
+            .Include(e => e.Metadata)
             .Where(e => e.ProjectId == projectId);
 
         var totalCount = await query.CountAsync(cancellationToken);
@@ -95,6 +99,7 @@ public class EntryService : IEntryService
         return await _context.Entries
             .Include(e => e.Project)
             .Include(e => e.Tags)
+            .Include(e => e.Metadata)
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
@@ -139,6 +144,15 @@ public class EntryService : IEntryService
         _context.Entries.Add(entry);
         await _context.SaveChangesAsync(cancellationToken);
 
+        // Trigger async metadata extraction for Link entries
+        if (entry.Type == EntryType.Link && !string.IsNullOrWhiteSpace(entry.Url))
+        {
+            _ = Task.Run(async () =>
+            {
+                await _metadataExtractionService.ExtractAndSaveMetadataAsync(entry.Id, entry.Url, CancellationToken.None);
+            }, cancellationToken);
+        }
+
         // Reload to get navigation properties
         return (await GetByIdAsync(entry.Id, cancellationToken))!;
     }
@@ -158,6 +172,9 @@ public class EntryService : IEntryService
         existingEntry.Description = entry.Description;
         existingEntry.Type = entry.Type;
         existingEntry.Content = entry.Content;
+        
+        // Track if URL changed for metadata re-extraction
+        var urlChanged = existingEntry.Url != entry.Url;
         existingEntry.Url = entry.Url;
         existingEntry.UpdatedAt = DateTime.UtcNow;
 
@@ -196,6 +213,15 @@ public class EntryService : IEntryService
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Trigger async metadata re-extraction if URL changed for Link entries
+        if (urlChanged && existingEntry.Type == EntryType.Link && !string.IsNullOrWhiteSpace(existingEntry.Url))
+        {
+            _ = Task.Run(async () =>
+            {
+                await _metadataExtractionService.ExtractAndSaveMetadataAsync(id, existingEntry.Url, CancellationToken.None);
+            }, cancellationToken);
+        }
 
         // Reload to get navigation properties
         return await GetByIdAsync(id, cancellationToken);

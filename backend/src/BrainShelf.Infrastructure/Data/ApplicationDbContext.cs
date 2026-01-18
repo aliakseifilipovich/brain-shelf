@@ -74,11 +74,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Metadata>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.PageTitle).HasMaxLength(500);
-            entity.Property(e => e.MetaDescription).HasMaxLength(2000);
+            entity.Property(e => e.Title).HasMaxLength(500);
+            entity.Property(e => e.Description).HasMaxLength(2000);
             entity.Property(e => e.Keywords).HasMaxLength(1000);
-            entity.Property(e => e.PreviewImageUrl).HasMaxLength(2000);
-            entity.Property(e => e.ExtractedAt).IsRequired();
+            entity.Property(e => e.ImageUrl).HasMaxLength(2000);
+            entity.Property(e => e.FaviconUrl).HasMaxLength(2000);
+            entity.Property(e => e.Author).HasMaxLength(200);
+            entity.Property(e => e.SiteName).HasMaxLength(200);
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Property(e => e.UpdatedAt).IsRequired();
 
