@@ -111,7 +111,7 @@ lerna-debug.log*
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
+frontend/*.sln
 *.sw?
 
 # Docker
