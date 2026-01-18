@@ -16,15 +16,18 @@ public class EntriesController : ControllerBase
 {
     private readonly IEntryService _entryService;
     private readonly IProjectService _projectService;
+    private readonly IMetadataExtractionService _metadataExtractionService;
     private readonly ILogger<EntriesController> _logger;
 
     public EntriesController(
         IEntryService entryService,
         IProjectService projectService,
+        IMetadataExtractionService metadataExtractionService,
         ILogger<EntriesController> logger)
     {
         _entryService = entryService;
         _projectService = projectService;
+        _metadataExtractionService = metadataExtractionService;
         _logger = logger;
     }
 
@@ -264,6 +267,59 @@ public class EntriesController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Manually trigger metadata extraction for an entry
+    /// </summary>
+    /// <param name="id">Entry ID</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>No content on success</returns>
+    /// <response code="202">Metadata extraction started</response>
+    /// <response code="400">Entry is not a Link type or has no URL</response>
+    /// <response code="404">Entry not found</response>
+    [HttpPost("{id:guid}/extract-metadata")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ExtractMetadata(Guid id, CancellationToken cancellationToken = default)
+    {
+        var entry = await _entryService.GetByIdAsync(id, cancellationToken);
+
+        if (entry is null)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Entry not found",
+                Detail = $"Entry with ID {id} was not found"
+            });
+        }
+
+        if (entry.Type != EntryType.Link || string.IsNullOrWhiteSpace(entry.Url))
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid entry for metadata extraction",
+                Detail = "Only Link type entries with a valid URL can have metadata extracted"
+            });
+        }
+
+        // Trigger extraction asynchronously (fire and forget)
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _metadataExtractionService.ExtractAndSaveMetadataAsync(id, entry.Url, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Background metadata extraction failed for entry {EntryId}", id);
+            }
+        }, cancellationToken);
+
+        return Accepted();
+    }
+
     private static EntryDto MapToDto(Entry entry)
     {
         return new EntryDto
@@ -277,6 +333,19 @@ public class EntriesController : ControllerBase
             Content = entry.Content,
             Url = entry.Url,
             Tags = entry.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }).ToList(),
+            Metadata = entry.Metadata != null ? new MetadataDto
+            {
+                Id = entry.Metadata.Id,
+                Title = entry.Metadata.Title,
+                Description = entry.Metadata.Description,
+                Keywords = entry.Metadata.Keywords,
+                ImageUrl = entry.Metadata.ImageUrl,
+                FaviconUrl = entry.Metadata.FaviconUrl,
+                Author = entry.Metadata.Author,
+                SiteName = entry.Metadata.SiteName,
+                CreatedAt = entry.Metadata.CreatedAt,
+                UpdatedAt = entry.Metadata.UpdatedAt
+            } : null,
             CreatedAt = entry.CreatedAt,
             UpdatedAt = entry.UpdatedAt
         };

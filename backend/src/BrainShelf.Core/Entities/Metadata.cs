@@ -2,6 +2,7 @@ namespace BrainShelf.Core.Entities;
 
 /// <summary>
 /// Represents metadata extracted from a URL for an entry
+/// Stores page title, description, keywords, images, and other metadata
 /// </summary>
 public class Metadata : BaseEntity
 {
@@ -9,13 +10,17 @@ public class Metadata : BaseEntity
     
     public Entry Entry { get; set; } = null!;
     
-    public string? PageTitle { get; set; }
+    public string? Title { get; set; }
     
-    public string? MetaDescription { get; set; }
+    public string? Description { get; set; }
     
     public string? Keywords { get; set; }
     
-    public string? PreviewImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
     
-    public DateTime ExtractedAt { get; set; }
+    public string? FaviconUrl { get; set; }
+    
+    public string? Author { get; set; }
+    
+    public string? SiteName { get; set; }
 }
