@@ -12,6 +12,9 @@ public class Entry : BaseEntity
     public EntryType Type { get; set; }
     public string? Content { get; set; }
     public string? Url { get; set; }
+    
+    public Metadata? Metadata { get; set; }
+    
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
 
