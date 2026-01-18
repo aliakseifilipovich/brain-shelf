@@ -22,7 +22,7 @@ Brain Shelf is a centralized storage application for organizing and managing use
 ## Technology Stack
 
 ### Backend
-- **.NET 8.0** - Modern, high-performance web API framework
+- **.NET 9.0** - Modern, high-performance web API framework
 - **Entity Framework Core** - ORM for database operations
 - **PostgreSQL** - Robust relational database
 
@@ -73,7 +73,7 @@ Brain Shelf is a centralized storage application for organizing and managing use
 
 #### Running Backend Locally (without Docker)
 
-**Prerequisites**: .NET 8.0 SDK
+**Prerequisites**: .NET 10.0 SDK
 
 ```bash
 cd backend/src/BrainShelf.Api
@@ -120,7 +120,7 @@ The backend provides health check endpoints:
 The `docker-compose.yml` defines three services:
 
 1. **database** - PostgreSQL 15 with persistent volume
-2. **backend** - .NET 8.0 Web API with hot reload support
+2. **backend** - .NET 9.0 Web API with hot reload support
 3. **frontend** - React + Vite with hot reload support
 
 ### Troubleshooting

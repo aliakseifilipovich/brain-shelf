@@ -1,6 +1,6 @@
 # Backend - Brain Shelf API
 
-.NET 8.0 Web API backend for Brain Shelf application.
+.NET 9.0 Web API backend for Brain Shelf application.
 
 ## Structure
 
@@ -16,9 +16,9 @@ backend/
 
 ## Technologies
 
-- **.NET 8.0** - Latest LTS version of .NET
+- **.NET 9.0** - Latest LTS version of .NET
 - **ASP.NET Core Web API** - RESTful API framework
-- **Entity Framework Core 8.0** - ORM for database operations
+- **Entity Framework Core 9.0** - ORM for database operations
 - **Npgsql** - PostgreSQL provider for EF Core
 - **Swagger/OpenAPI** - API documentation
 
