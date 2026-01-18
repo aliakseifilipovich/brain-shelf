@@ -1,0 +1,7 @@
+# Prompts History
+
+This file contains the history of all prompts used during the development of Brain Shelf.
+
+## Prompts List
+
+1. I need to develop a web application called "Brain Shelf" for centralized storage of useful project-related information. Main Goals: Collect instructions, settings, links, and notes from work chats into a structured and easily searchable storage. Requirements: (1) Support for multiple projects. (2) Convenient search, including: full-text search, filtering by descriptions, tags, and types, autocomplete. (3) Minimal manual input: if a link is submitted, automatically extract: page title, meta description, keywords, preview if possible. (4) Multilingual support: English and Russian. (5) Documentation: README with project description and run instructions, prompts.md file containing the history of all prompts - will be just only list with prompts as numeric list. (6) Technologies: Backend: latest .NET version, Database: PostgreSQL, Frontend: React + TypeScript, Docker. Repository: https://github.com/aliakseifilipovich/brain-shelf. What I need from you now: Create a development plan and cut it in GitHub Issues including: Number, Title, Description, Acceptance criteria, Component grouping and priorities. Each issue should represent a logically complete piece of work so that after it's done you can clearly see a concrete result. Create a .gitignore file and pull request with all this first files.
