@@ -49,25 +49,109 @@ Brain Shelf is a centralized storage application for organizing and managing use
    cd brain-shelf
    ```
 
-2. **Set up environment variables**
-   ```bash
-   # Copy example environment files (to be created)
-   cp .env.example .env
-   ```
-
-3. **Start the application with Docker**
+2. **Start the application with Docker**
    ```bash
    docker-compose up -d
    ```
+   
+   This command will:
+   - Start PostgreSQL database on port 5432
+   - Build and start the .NET backend API on port 5000
+   - Build and start the React frontend on port 3000
 
-4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-   - Swagger Documentation: http://localhost:5000/swagger
+3. **Access the application**
+   - **Frontend**: http://localhost:3000
+   - **Backend API**: http://localhost:5000/api/health
+   - **Swagger Documentation**: http://localhost:5000/swagger
+
+4. **Stop the application**
+   ```bash
+   docker-compose down
+   ```
 
 ### Development Setup
 
-Coming soon - detailed instructions for running backend and frontend in development mode.
+#### Running Backend Locally (without Docker)
+
+**Prerequisites**: .NET 8.0 SDK
+
+```bash
+cd backend/src/BrainShelf.Api
+dotnet restore
+dotnet run
+```
+
+The API will be available at http://localhost:5000
+
+#### Running Frontend Locally (without Docker)
+
+**Prerequisites**: Node.js 20+
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at http://localhost:3000
+
+### Database Configuration
+
+The default database credentials are:
+- **Host**: localhost (or `database` within Docker network)
+- **Port**: 5432
+- **Database**: brainshelf
+- **Username**: admin
+- **Password**: admin
+
+To connect to the database:
+```bash
+docker-compose exec database psql -U admin -d brainshelf
+```
+
+### Health Checks
+
+The backend provides health check endpoints:
+- **Basic Health**: GET `/api/health` - Returns service status and version
+- **Full Health**: GET `/health` - Includes database connectivity check
+
+### Docker Services
+
+The `docker-compose.yml` defines three services:
+
+1. **database** - PostgreSQL 15 with persistent volume
+2. **backend** - .NET 8.0 Web API with hot reload support
+3. **frontend** - React + Vite with hot reload support
+
+### Troubleshooting
+
+**Container logs**:
+```bash
+# View all logs
+docker-compose logs
+
+# View specific service logs
+docker-compose logs backend
+docker-compose logs frontend
+docker-compose logs database
+
+# Follow logs in real-time
+docker-compose logs -f
+```
+
+**Rebuild containers**:
+```bash
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+**Database issues**:
+```bash
+# Reset database (WARNING: destroys all data)
+docker-compose down -v
+docker-compose up -d
+```
 
 ## Project Structure
 
@@ -89,8 +173,8 @@ brain-shelf/
 See our [GitHub Issues](https://github.com/aliakseifilipovich/brain-shelf/issues) for the complete development roadmap.
 
 ### Phase 1: Foundation (Issues #1-2)
-- [x] Project infrastructure setup
-- [ ] Database schema and migrations
+- ✅ Project infrastructure setup (Issue #1)
+- [ ] Database schema and migrations (Issue #2)
 
 ### Phase 2: Core Backend (Issues #3-6)
 - [ ] Projects API
