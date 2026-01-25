@@ -29,7 +29,7 @@ public class CreateEntryDtoValidator : AbstractValidator<CreateEntryDto>
 
         RuleFor(x => x.Type)
             .IsInEnum()
-            .WithMessage("Entry type must be Link, Note, Setting, or Instruction");
+            .WithMessage("Entry type must be Link, Note, Code, or Task");
 
         // Type-specific validation for Link entries
         When(x => x.Type == EntryType.Link, () =>
@@ -40,17 +40,15 @@ public class CreateEntryDtoValidator : AbstractValidator<CreateEntryDto>
                 .Must(BeAValidUrl)
                 .WithMessage("URL must be a valid HTTP or HTTPS URL");
 
-            RuleFor(x => x.Content)
-                .NotEmpty()
-                .WithMessage("Content is required for Link entries");
+            // Content is optional for Link entries - will be auto-extracted from URL
         });
 
-        // Type-specific validation for Note, Setting, and Instruction entries
-        When(x => x.Type == EntryType.Note || x.Type == EntryType.Setting || x.Type == EntryType.Instruction, () =>
+        // Type-specific validation for Note, Code, and Task entries
+        When(x => x.Type == EntryType.Note || x.Type == EntryType.Code || x.Type == EntryType.Task, () =>
         {
             RuleFor(x => x.Content)
                 .NotEmpty()
-                .WithMessage($"Content is required for {nameof(EntryType.Note)}, {nameof(EntryType.Setting)}, and {nameof(EntryType.Instruction)} entries");
+                .WithMessage("Content is required for Note, Code, and Task entries");
         });
 
         RuleFor(x => x.Url)

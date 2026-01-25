@@ -9,13 +9,10 @@ Brain Shelf is a centralized storage application for organizing and managing use
   - Full-text search across all content
   - Filter by descriptions, tags, and entry types
   - Autocomplete suggestions
-- **Automatic Metadata Extraction**: 
-  - Automatically extract page titles, descriptions, keywords, and preview images from links
-  - Minimal manual input required
 - **Entry Types**:
-  - 🔗 Links (with automatic metadata extraction)
+  - 🔗 Links
   - 📝 Notes
-  - ⚙️ Settings
+  - 💻 Code
   - 📋 Instructions
 
 ## Technology Stack

@@ -188,6 +188,26 @@ public class EntriesController : ControllerBase
 
         var createdEntry = await _entryService.CreateAsync(entry, createDto.Tags, cancellationToken);
 
+        // Automatically extract metadata for Link type entries
+        if (createDto.Type == EntryType.Link && !string.IsNullOrWhiteSpace(createDto.Url))
+        {
+            // Trigger metadata extraction asynchronously (fire and forget)
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _metadataExtractionService.ExtractAndSaveMetadataAsync(
+                        createdEntry.Id, 
+                        createDto.Url, 
+                        CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Background metadata extraction failed for entry {EntryId}", createdEntry.Id);
+                }
+            }, cancellationToken);
+        }
+
         var entryDto = MapToDto(createdEntry);
 
         return CreatedAtAction(
@@ -234,6 +254,26 @@ public class EntriesController : ControllerBase
                 Title = "Entry not found",
                 Detail = $"Entry with ID {id} was not found"
             });
+        }
+
+        // Automatically extract metadata for Link type entries
+        if (updateDto.Type == EntryType.Link && !string.IsNullOrWhiteSpace(updateDto.Url))
+        {
+            // Trigger metadata extraction asynchronously (fire and forget)
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _metadataExtractionService.ExtractAndSaveMetadataAsync(
+                        updatedEntry.Id, 
+                        updateDto.Url, 
+                        CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Background metadata extraction failed for entry {EntryId}", updatedEntry.Id);
+                }
+            }, cancellationToken);
         }
 
         return Ok(MapToDto(updatedEntry));
