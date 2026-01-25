@@ -12,7 +12,6 @@ Brain Shelf is a centralized storage application for organizing and managing use
 - **Automatic Metadata Extraction**: 
   - Automatically extract page titles, descriptions, keywords, and preview images from links
   - Minimal manual input required
-- **Multilingual Support**: English and Russian languages
 - **Entry Types**:
   - 🔗 Links (with automatic metadata extraction)
   - 📝 Notes
@@ -33,7 +32,7 @@ Brain Shelf is a centralized storage application for organizing and managing use
 
 ### Infrastructure
 - **Docker & Docker Compose** - Containerization for easy deployment
-- **PostgreSQL Full-Text Search** - Powerful multilingual search capabilities
+- **PostgreSQL Full-Text Search** - Powerful full-text search capabilities
 
 ## Getting Started
 
