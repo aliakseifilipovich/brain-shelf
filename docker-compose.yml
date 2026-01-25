@@ -21,7 +21,6 @@ services:
     networks:
       - brainshelf-network
 
-  # .NET Backend API
   backend:
     build:
       context: ./backend
@@ -32,7 +31,7 @@ services:
       - ASPNETCORE_URLS=http://+:5000
       - ConnectionStrings__DefaultConnection=Host=database;Port=5432;Database=brainshelf;Username=admin;Password=admin
     ports:
-      - "5000:5000"
+      - "5001:5000"
     depends_on:
       database:
         condition: service_healthy
@@ -42,14 +41,13 @@ services:
       - ./backend:/app/backend
     restart: unless-stopped
 
-  # React Frontend
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: brainshelf-frontend
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - VITE_API_URL=http://localhost:5001
     ports:
       - "3000:3000"
     depends_on:

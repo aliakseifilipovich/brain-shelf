@@ -34,7 +34,7 @@ export const fetchProjects = createAsyncThunk(
 
 export const fetchProjectById = createAsyncThunk(
   'projects/fetchProjectById',
-  async (id: number) => {
+  async (id: string) => {
     const response = await projectsApi.getById(id);
     return response.data;
   }
@@ -50,7 +50,7 @@ export const createProject = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   'projects/updateProject',
-  async ({ id, data }: { id: number; data: Partial<Project> }) => {
+  async ({ id, data }: { id: string; data: Partial<Project> }) => {
     const response = await projectsApi.update(id, data);
     return response.data;
   }
@@ -58,7 +58,7 @@ export const updateProject = createAsyncThunk(
 
 export const deleteProject = createAsyncThunk(
   'projects/deleteProject',
-  async (id: number) => {
+  async (id: string) => {
     await projectsApi.delete(id);
     return id;
   }

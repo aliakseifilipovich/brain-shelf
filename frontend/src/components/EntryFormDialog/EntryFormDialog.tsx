@@ -12,12 +12,14 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material';
-import { Entry, EntryType } from '../../types/models';
+import { Entry, EntryType, Project } from '../../types/models';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchProjects } from '../../store/projectsSlice';
 
 interface EntryFormDialogProps {
   open: boolean;
   entry: Entry | null;
-  projectId?: number;
+  projectId?: string;
   onClose: () => void;
   onSubmit: (entryData: Partial<Entry>) => Promise<void>;
 }
@@ -29,15 +31,24 @@ const EntryFormDialog: React.FC<EntryFormDialogProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const dispatch = useAppDispatch();
+  const { projects } = useAppSelector((state) => state.projects);
+  
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [url, setUrl] = useState('');
   const [type, setType] = useState<EntryType>(EntryType.Note);
-  const [selectedProjectId, setSelectedProjectId] = useState<number | undefined>(projectId);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>(projectId);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (open && projects.length === 0) {
+      dispatch(fetchProjects());
+    }
+  }, [open, dispatch, projects.length]);
 
   useEffect(() => {
     if (entry) {
@@ -77,6 +88,15 @@ const EntryFormDialog: React.FC<EntryFormDialogProps> = ({
           newErrors.url = 'Please enter a valid URL';
         }
       }
+      if (!content.trim()) {
+        newErrors.content = 'Content is required for link entries';
+      }
+    }
+
+    if (type === EntryType.Note || type === EntryType.Code || type === EntryType.Task) {
+      if (!content.trim()) {
+        newErrors.content = 'Content is required';
+      }
     }
 
     if (content && content.length > 10000) {
@@ -101,10 +121,10 @@ const EntryFormDialog: React.FC<EntryFormDialogProps> = ({
       const entryData: Partial<Entry> = {
         title: title.trim(),
         content: content.trim() || undefined,
-        url: type === EntryType.Link ? url.trim() : undefined,
+        url: type === EntryType.Link && url.trim() ? url.trim() : undefined,
         type,
         projectId: selectedProjectId!,
-        tags: tags.length > 0 ? tags : undefined,
+        tags: tags,
       };
 
       if (entry) {
@@ -156,6 +176,24 @@ const EntryFormDialog: React.FC<EntryFormDialogProps> = ({
             <MenuItem value={EntryType.Link}>Link</MenuItem>
             <MenuItem value={EntryType.Code}>Code</MenuItem>
             <MenuItem value={EntryType.Task}>Task</MenuItem>
+          </TextField>
+
+          <TextField
+            label="Project"
+            select
+            value={selectedProjectId || ''}
+            onChange={(e) => setSelectedProjectId(e.target.value)}
+            error={!!errors.projectId}
+            helperText={errors.projectId || 'Select a project for this entry'}
+            fullWidth
+            size="small"
+            required
+          >
+            {projects.map((project) => (
+              <MenuItem key={project.id} value={project.id}>
+                {project.name}
+              </MenuItem>
+            ))}
           </TextField>
 
           <TextField

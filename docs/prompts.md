@@ -6,30 +6,49 @@ This file contains the history of all prompts used during the development of Bra
 
 1. I need to develop a web application called "Brain Shelf" for centralized storage of useful project-related information. Main Goals: Collect instructions, settings, links, and notes from work chats into a structured and easily searchable storage. Requirements: (1) Support for multiple projects. (2) Convenient search, including: full-text search, filtering by descriptions, tags, and types, autocomplete. (3) Minimal manual input: if a link is submitted, automatically extract: page title, meta description, keywords, preview if possible. (4) Documentation: README with project description and run instructions, prompts.md file containing the history of all prompts - will be just only list with prompts as numeric list. (5) Technologies: Backend: latest .NET version, Database: PostgreSQL, Frontend: React + TypeScript, Docker. Repository: https://github.com/aliakseifilipovich/brain-shelf. What I need from you now: Create a development plan and cut it in GitHub Issues including: Number, Title, Description, Acceptance criteria, Component grouping and priorities. Each issue should represent a logically complete piece of work so that after it's done you can clearly see a concrete result. Create a .gitignore file and pull request with all this first files.
 
-2. Let's implement the issue 1 and create pull request, also please add this promt to promts file with history. If you will need to clyrify something or any questions please ask me before procceed. [User provided clarifications: Ports 3000/5000 confirmed, Use BrainShelf naming, Database credentials: admin/admin, No .env.example needed now, Create full layered architecture, Create new feature branch]
+2. Let's implement the issue 1 and create pull request, also please add this promt to promts file with history. If you will need to clyrify something or any questions please ask me before procceed.
 
 3. Please implement the issue 2 and create the new PR with implementation, check that everything works as expected before creating PR, if u will need to clarify something please ask me before proceed. Please do not create seed data
 
-4. Please implement the issue 3 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous. [User provided clarifications: FluentValidation for validation, NUnit for testing, 20 items per page for pagination, RFC 7807 Problem Details format for errors]
+4. Please implement the issue 3 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous.
 
-5. Please implement the issue 4 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous. [User provided clarifications: Tag management - accept tag names and auto-create if they don't exist (case-insensitive), Entry content validation - Link type requires both URL and Content, Note/Setting/Instruction types require Content only (Url is optional), Tag filtering uses OR logic (entry must have ANY of the specified tags), Skip integration tests for now]
+5. Please implement the issue 4 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous.
 
-6. Please implement the issue 5 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous. [User provided clarifications: Execution mode - asynchronous (entry created immediately, metadata extracted in background), HTML parsing library - HtmlAgilityPack, Trigger behavior - only for Link type entries when creating/updating, URL update - automatically re-extract metadata when URL changes, Entry response - metadata as nested object in EntryDto]
+6. Please implement the issue 5 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous.
 
-7. Please implement the issue 6,7,8,9,10 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous. [User provided clarifications: Issue #6 (Full-Text Search) - SKIP for now, will be implemented later, Question 2 (Autocomplete) - Use easiest approach for now, Question 3 (Search highlighting) - Yes to highlighting, UI Component Library - Material-UI (MUI), State Management - Redux Toolkit, Styling - CSS Modules, PR Strategy - Individual PRs for each issue (#7, #8, #9, #10)]
+7. Please implement the issue 6,7,8,9,10 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous.
 
-8. go [Continuing with Issue #8 implementation after Issue #7 PR #25 was created]
+8. go
 
-9. go [Continued with Issue #9 - Entries Management UI]
+9. go
 
-10. Let's continue with issue 6 [Implementing Full-Text Search backend - PostgreSQL FTS with tsvector/tsquery, GIN indexes, search across Entries, Metadata, and Tags with filtering and pagination]
+10. Let's continue with issue 6
 
-11. We can continue with issue-10 [Implementing Search Interface frontend - Search page with debounced input, autocomplete from history, advanced filters (project, type, date range), result highlighting, pagination, empty states, and search history persistence in localStorage]
+11. We can continue with issue-10
 
-12. I thought, please close issue, we will skip internationalization, and update all docs removing all information about it [Decided to skip Issue #11 (Internationalization) - removed multilingual support requirements from documentation and closed the issue]
+12. I thought, please close issue, we will skip internationalization, and update all docs removing all information about it
 
-13. Let's implement issue 12 [Implementing Production Docker Configuration and Deployment - Multi-stage Docker builds for backend (.NET) and frontend (React + nginx), production docker-compose.yml with health checks, resource limits, logging configuration, nginx reverse proxy with caching/compression/security headers, non-root containers, environment variable management, automated backup/restore scripts, comprehensive deployment documentation]
+13. Let's implement issue 12
 
-14. Next issue - 13 [Implementing Comprehensive Test Coverage for Backend - User clarifications: Continue with NUnit (not xUnit), Focus on backend testing only (no frontend tests), No E2E tests, No CI/CD integration, Use in-memory database for integration tests, No code coverage tools setup. Implemented: TestDataFactory for consistent test data generation, Unit tests for ProjectService and SearchService (>80% coverage), Integration tests for ProjectsController, EntriesController, and SearchController using WebApplicationFactory with in-memory database, comprehensive test documentation in backend/tests/README.md with patterns, examples, and troubleshooting]
+14. Next issue - 13
 
-15. Let's implement the last issues 14 and 15, create PR for each one [Implementing Issues #14 (Tags Autocomplete and Management) and #15 (Entry Templates and Quick Actions). For #14: Backend - TagsController with comprehensive API endpoints (list, create, merge, delete, statistics, popular, recent, unused), TagService with tag search/statistics/merging logic. Frontend - TagAutocomplete component with debounced search and popular tags display, TagManagement page with rename/merge/delete dialogs, tag statistics dashboard, quick stats sections. For #15: Backend - Template entity with project association, TemplatesController with CRUD operations, TemplateService, quick action endpoints (duplicate entry, bulk delete, bulk tag) added to EntriesController, database migration for Templates table. Frontend - TemplateSelectDialog for choosing templates when creating entries, EntryActionsMenu component with edit/duplicate/delete quick actions.]
+15. Let's implement the last issues 14 and 15, create PR for each one
+
+16. OK, let's start it from docker and check what we have
+
+17. but PR 34 has conflicts
+
+18. just give me link to UI
+
+19. Multiple UI error reports and fixes
+
+20. when I try to create entity the button create doesn't work
+
+21. I don't see the new entity after create the new one
+
+22. when I opened project I don't see the list with entities
+
+23. when I SEARCH SOMETHING - search works ok, but after click view details - Entry not found
+
+24. Create PR with bugs fixes and update promts.md, but summurize my promts where we fixes bugs
+

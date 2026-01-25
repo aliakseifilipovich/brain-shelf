@@ -35,7 +35,7 @@ export const EntryDetailPage = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchEntryById(Number(id)));
+      dispatch(fetchEntryById(id));
     }
 
     return () => {

@@ -22,15 +22,6 @@ public class EntryDto
 }
 
 /// <summary>
-/// Data transfer object for tag information
-/// </summary>
-public class TagDto
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-}
-
-/// <summary>
 /// Data transfer object for metadata information
 /// </summary>
 public class MetadataDto
