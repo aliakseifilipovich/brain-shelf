@@ -95,25 +95,65 @@ const EntryCard: React.FC<EntryCardProps> = ({ entry, onEdit, onDelete }) => {
       onClick={handleCardClick}
       sx={{
         cursor: 'pointer',
-        transition: 'all 0.2s',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'all 0.2s ease-in-out',
+        border: '1px solid',
+        borderColor: 'divider',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 4,
+          transform: 'translateY(-2px)',
+          boxShadow: 3,
+          borderColor: 'primary.light',
         },
       }}
     >
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-          {getTypeIcon()}
-          <Chip label={getTypeLabel()} size="small" color={getTypeColor() as any} />
+      <CardContent sx={{ flexGrow: 1, p: 2 }}>
+        <Box display="flex" alignItems="center" gap={1} mb={1.5}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            width: 24,
+            height: 24,
+            borderRadius: 0.5,
+            backgroundColor: `${getTypeColor()}.50`,
+          }}>
+            {getTypeIcon()}
+          </Box>
+          <Chip 
+            label={getTypeLabel()} 
+            size="small" 
+            color={getTypeColor() as any}
+            sx={{ height: 20, fontSize: '0.7rem', fontWeight: 500 }}
+          />
         </Box>
 
-        <Typography variant="h6" component="h3" gutterBottom noWrap>
+        <Typography 
+          variant="h6" 
+          component="h3" 
+          gutterBottom 
+          noWrap
+          sx={{ 
+            fontSize: '1rem',
+            fontWeight: 600,
+            mb: 1,
+          }}
+        >
           {entry.title}
         </Typography>
 
         {entry.url && (
-          <Typography variant="body2" color="text.secondary" noWrap gutterBottom>
+          <Typography 
+            variant="body2" 
+            color="text.secondary" 
+            noWrap 
+            sx={{ 
+              fontSize: '0.75rem',
+              mb: 1,
+              opacity: 0.7,
+            }}
+          >
             {entry.url}
           </Typography>
         )}
@@ -124,70 +164,100 @@ const EntryCard: React.FC<EntryCardProps> = ({ entry, onEdit, onDelete }) => {
             color="text.secondary"
             sx={{
               display: '-webkit-box',
-              WebkitLineClamp: 3,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              mb: 1,
+              fontSize: '0.8rem',
+              lineHeight: 1.5,
+              mb: 1.5,
             }}
           >
             {entry.content}
           </Typography>
         )}
 
-        {entry.metadata && (
-          <Box mt={1}>
-            {entry.metadata.faviconUrl && (
-              <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                <img
-                  src={entry.metadata.faviconUrl}
-                  alt="Favicon"
-                  style={{ width: 16, height: 16 }}
-                />
-                <Typography variant="caption" color="text.secondary">
-                  {entry.metadata.siteName || 'Website'}
-                </Typography>
-              </Box>
-            )}
-            {entry.metadata.description && (
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}
-              >
-                {entry.metadata.description}
-              </Typography>
-            )}
+        {entry.metadata && entry.metadata.faviconUrl && (
+          <Box display="flex" alignItems="center" gap={0.5} mb={1}>
+            <img
+              src={entry.metadata.faviconUrl}
+              alt="Favicon"
+              style={{ width: 14, height: 14 }}
+            />
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              {entry.metadata.siteName || 'Website'}
+            </Typography>
           </Box>
         )}
 
         {entry.tags && entry.tags.length > 0 && (
-          <Box mt={1} display="flex" gap={0.5} flexWrap="wrap">
-            {entry.tags.map((tag) => (
-              <Chip key={tag} label={tag} size="small" variant="outlined" />
+          <Box mt={1.5} display="flex" gap={0.5} flexWrap="wrap">
+            {entry.tags.slice(0, 3).map((tag) => (
+              <Chip 
+                key={tag} 
+                label={tag} 
+                size="small" 
+                variant="outlined"
+                sx={{ 
+                  height: 18, 
+                  fontSize: '0.65rem',
+                  borderColor: 'divider',
+                }}
+              />
             ))}
+            {entry.tags.length > 3 && (
+              <Chip 
+                label={`+${entry.tags.length - 3}`} 
+                size="small" 
+                variant="outlined"
+                sx={{ 
+                  height: 18, 
+                  fontSize: '0.65rem',
+                  borderColor: 'divider',
+                }}
+              />
+            )}
           </Box>
         )}
 
-        <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-          Updated: {new Date(entry.updatedAt).toLocaleDateString()}
+        <Typography 
+          variant="caption" 
+          color="text.secondary" 
+          display="block" 
+          mt={2}
+          sx={{ fontSize: '0.7rem', opacity: 0.6 }}
+        >
+          {new Date(entry.updatedAt).toLocaleDateString()}
         </Typography>
       </CardContent>
 
-      <CardActions sx={{ justifyContent: 'flex-end', p: 1 }}>
+      <CardActions sx={{ justifyContent: 'flex-end', p: 1, pt: 0, gap: 0.5 }}>
         <Tooltip title="Edit">
-          <IconButton size="small" onClick={handleEdit} color="primary">
-            <EditIcon fontSize="small" />
+          <IconButton 
+            size="small" 
+            onClick={handleEdit} 
+            sx={{ 
+              '&:hover': { 
+                backgroundColor: 'primary.50',
+                color: 'primary.main',
+              }
+            }}
+          >
+            <EditIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete">
-          <IconButton size="small" onClick={handleDelete} color="error">
-            <DeleteIcon fontSize="small" />
+          <IconButton 
+            size="small" 
+            onClick={handleDelete}
+            sx={{ 
+              '&:hover': { 
+                backgroundColor: 'error.50',
+                color: 'error.main',
+              }
+            }}
+          >
+            <DeleteIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
       </CardActions>
