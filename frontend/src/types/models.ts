@@ -1,5 +1,5 @@
 export interface Project {
-  id: number;
+  id: string;
   name: string;
   description?: string;
   tags?: string[];
@@ -8,8 +8,8 @@ export interface Project {
 }
 
 export interface Entry {
-  id: number;
-  projectId: number;
+  id: string;
+  projectId: string;
   projectName?: string;
   title: string;
   description?: string;
@@ -18,7 +18,7 @@ export interface Entry {
   type: EntryType;
   tags?: string[];
   tagNames?: string[];
-  metadataId?: number;
+  metadataId?: string;
   metadata?: Metadata;
   createdAt: string;
   updatedAt: string;
@@ -32,7 +32,7 @@ export enum EntryType {
 }
 
 export interface Metadata {
-  id: number;
+  id: string;
   title?: string;
   description?: string;
   keywords?: string;
@@ -45,7 +45,7 @@ export interface Metadata {
 }
 
 export interface Tag {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;

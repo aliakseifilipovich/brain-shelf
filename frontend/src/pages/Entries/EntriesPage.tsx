@@ -20,12 +20,12 @@ import {
 import { showSnackbar } from '@store/uiSlice';
 import EntryCard from '@components/EntryCard/EntryCard';
 import EntryFormDialog from '@components/EntryFormDialog/EntryFormDialog';
-import DeleteConfirmDialog from '@components/DeleteConfirmDialog/DeleteConfirmDialog';
+import { DeleteConfirmDialog } from '@components/DeleteConfirmDialog/DeleteConfirmDialog';
 import { Entry, EntryType } from '@types/models';
 
 export const EntriesPage = () => {
   const dispatch = useAppDispatch();
-  const { items: entries, loading, totalPages } = useAppSelector((state) => state.entries);
+  const { entries, loading, totalPages } = useAppSelector((state) => state.entries);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
@@ -41,7 +41,7 @@ export const EntriesPage = () => {
     };
 
     if (searchQuery) {
-      params.searchTerm = searchQuery;
+      params.searchQuery = searchQuery;
     }
 
     if (typeFilter !== 'all') {
@@ -69,13 +69,25 @@ export const EntriesPage = () => {
   const handleFormSubmit = async (entryData: Partial<Entry>) => {
     try {
       if (selectedEntry) {
-        await dispatch(updateEntry({ id: selectedEntry.id, entry: entryData })).unwrap();
+        await dispatch(updateEntry({ id: selectedEntry.id, data: entryData })).unwrap();
         dispatch(showSnackbar({ message: 'Entry updated successfully', severity: 'success' }));
       } else {
         await dispatch(createEntry(entryData)).unwrap();
         dispatch(showSnackbar({ message: 'Entry created successfully', severity: 'success' }));
       }
       setIsFormOpen(false);
+      // Refresh the entries list
+      const params: any = {
+        pageNumber: page,
+        pageSize: 20,
+      };
+      if (searchQuery) {
+        params.searchQuery = searchQuery;
+      }
+      if (typeFilter !== 'all') {
+        params.type = Number(typeFilter);
+      }
+      dispatch(fetchEntries(params));
     } catch (error) {
       dispatch(
         showSnackbar({
@@ -93,6 +105,18 @@ export const EntriesPage = () => {
       await dispatch(deleteEntry(selectedEntry.id)).unwrap();
       dispatch(showSnackbar({ message: 'Entry deleted successfully', severity: 'success' }));
       setIsDeleteDialogOpen(false);
+      // Refresh the entries list
+      const params: any = {
+        pageNumber: page,
+        pageSize: 20,
+      };
+      if (searchQuery) {
+        params.searchQuery = searchQuery;
+      }
+      if (typeFilter !== 'all') {
+        params.type = Number(typeFilter);
+      }
+      dispatch(fetchEntries(params));
     } catch (error) {
       dispatch(showSnackbar({ message: 'Failed to delete entry', severity: 'error' }));
     }

@@ -43,21 +43,21 @@ export const projectsApi = {
   getAll: (params?: { pageNumber?: number; pageSize?: number; searchQuery?: string }) =>
     apiClient.get<PaginatedResponse<Project>>('/projects', { params }),
 
-  getById: (id: number) => apiClient.get<Project>(`/projects/${id}`),
+  getById: (id: string) => apiClient.get<Project>(`/projects/${id}`),
 
   create: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) =>
     apiClient.post<Project>('/projects', project),
 
-  update: (id: number, project: Partial<Project>) =>
+  update: (id: string, project: Partial<Project>) =>
     apiClient.put<Project>(`/projects/${id}`, project),
 
-  delete: (id: number) => apiClient.delete(`/projects/${id}`),
+  delete: (id: string) => apiClient.delete(`/projects/${id}`),
 };
 
 // Entries API
 export const entriesApi = {
   getAll: (params?: {
-    projectId?: number;
+    projectId?: string;
     pageNumber?: number;
     pageSize?: number;
     searchQuery?: string;
@@ -70,24 +70,24 @@ export const entriesApi = {
       },
     }),
 
-  getById: (id: number) => apiClient.get<Entry>(`/entries/${id}`),
+  getById: (id: string) => apiClient.get<Entry>(`/entries/${id}`),
 
   create: (entry: Omit<Entry, 'id' | 'createdAt' | 'updatedAt' | 'metadata'>) =>
     apiClient.post<Entry>('/entries', entry),
 
-  update: (id: number, entry: Partial<Entry>) =>
+  update: (id: string, entry: Partial<Entry>) =>
     apiClient.put<Entry>(`/entries/${id}`, entry),
 
-  delete: (id: number) => apiClient.delete(`/entries/${id}`),
+  delete: (id: string) => apiClient.delete(`/entries/${id}`),
 
-  extractMetadata: (id: number) => apiClient.post<Entry>(`/entries/${id}/extract-metadata`),
+  extractMetadata: (id: string) => apiClient.post<Entry>(`/entries/${id}/extract-metadata`),
 };
 
 // Search API
 export const searchApi = {
   search: (params: {
     q?: string;
-    projectId?: number;
+    projectId?: string;
     type?: EntryType;
     fromDate?: string;
     toDate?: string;

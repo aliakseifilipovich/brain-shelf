@@ -27,7 +27,7 @@ const initialState: EntriesState = {
 export const fetchEntries = createAsyncThunk(
   'entries/fetchEntries',
   async (params: {
-    projectId?: number;
+    projectId?: string;
     pageNumber?: number;
     pageSize?: number;
     searchQuery?: string;
@@ -40,7 +40,7 @@ export const fetchEntries = createAsyncThunk(
 
 export const fetchEntryById = createAsyncThunk(
   'entries/fetchEntryById',
-  async (id: number) => {
+  async (id: string) => {
     const response = await entriesApi.getById(id);
     return response.data;
   }
@@ -56,20 +56,20 @@ export const createEntry = createAsyncThunk(
 
 export const updateEntry = createAsyncThunk(
   'entries/updateEntry',
-  async ({ id, data }: { id: number; data: Partial<Entry> }) => {
+  async ({ id, data }: { id: string; data: Partial<Entry> }) => {
     const response = await entriesApi.update(id, data);
     return response.data;
   }
 );
 
-export const deleteEntry = createAsyncThunk('entries/deleteEntry', async (id: number) => {
+export const deleteEntry = createAsyncThunk('entries/deleteEntry', async (id: string) => {
   await entriesApi.delete(id);
   return id;
 });
 
 export const extractMetadata = createAsyncThunk(
   'entries/extractMetadata',
-  async (id: number) => {
+  async (id: string) => {
     const response = await entriesApi.extractMetadata(id);
     return response.data;
   }
