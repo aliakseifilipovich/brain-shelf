@@ -7,7 +7,6 @@ import {
   Chip,
   Button,
   Alert,
-  Grid,
   TextField,
   MenuItem,
   Collapse,
@@ -25,17 +24,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { fetchProjectById, clearCurrentProject } from '@store/projectsSlice';
 import { fetchEntries, createEntry, updateEntry, deleteEntry } from '@store/entriesSlice';
-import EntryCard from '@components/EntryCard/EntryCard';
 import EntryFormDialog from '@components/EntryFormDialog/EntryFormDialog';
 import { Entry, EntryType } from '@types/models';
 import { DeleteConfirmDialog } from '@components/DeleteConfirmDialog/DeleteConfirmDialog';
+import { EntriesTable } from '@components/EntriesTable/EntriesTable';
 
 export const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { currentProject, loading, error } = useAppSelector(state => state.projects);
-  const { entries, loading: entriesLoading } = useAppSelector(state => state.entries);
+  const { entries, loading: entriesLoading, totalCount, pageNumber, pageSize } = useAppSelector(state => state.entries);
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -44,14 +43,30 @@ export const ProjectDetailPage = () => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchProjectById(id));
-      dispatch(fetchEntries({ projectId: id, pageSize: 100 }));
+    iffetchEntriesData();
     }
     return () => {
       dispatch(clearCurrentProject());
+    };
+  }, [dispatch, id]);
+
+  const fetchEntriesData = () => {
+    if (id) {
+      dispatch(fetchEntries({ 
+        projectId: id, 
+        pageNumber: currentPage + 1, 
+        pageSize: rowsPerPage 
+      }));
+    }
+  };
+
+  useEffect(() => {
+    fetchEntriesData();
+  }, [currentPage, rowsPerPagearCurrentProject());
     };
   }, [dispatch, id]);
 
@@ -74,9 +89,7 @@ export const ProjectDetailPage = () => {
   };
 
   const handleDeleteEntry = (entry: Entry) => {
-    setSelectedEntry(entry);
-    setIsDeleteDialogOpen(true);
-  };
+    setSfetchEntriesData();
 
   const handleFormSubmit = (data: any) => {
     const action = selectedEntry
@@ -92,14 +105,21 @@ export const ProjectDetailPage = () => {
           dispatch(fetchEntries({ projectId: id, pageSize: 100 }));
         }
       })
-      .catch((err) => {
-        console.error('Failed to save entry:', err);
-      });
+      .catfetchEntriesData();
+        })
+        .catch((err) => {
+          console.error('Failed to delete entry:', err);
+        });
+    }
   };
 
-  const handleDeleteConfirm = () => {
-    if (selectedEntry) {
-      dispatch(deleteEntry(selectedEntry.id))
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setCurrentPage(0); dispatch(deleteEntry(selectedEntry.id))
         .unwrap()
         .then(() => {
           setIsDeleteDialogOpen(false);
@@ -114,21 +134,16 @@ export const ProjectDetailPage = () => {
     }
   };
 
-  // Filter entries based on search and type
-  const filteredEntries = entries.filter(entry => {
-    const matchesSearch = searchQuery === '' || 
-      entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (entry.content && entry.content.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (entry.tags && entry.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
-    
-    const matchesType = typeFilter === 'all' || entry.type === Number(typeFilter);
-    
-    return matchesSearch && matchesType;
-  });
-
   const handleClearSearch = () => {
     setSearchQuery('');
     setTypeFilter('all');
+    setCurrentPage(0);
+    fetchEntriesData();
+  };
+
+  const handleSearch = () => {
+    setCurrentPage(0);
+    fetchEntriesData();
   };
 
   if (loading) {
@@ -290,6 +305,7 @@ export const ProjectDetailPage = () => {
           placeholder="Search entries..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           size="small"
           sx={{ flex: 1 }}
           InputProps={{
@@ -311,16 +327,27 @@ export const ProjectDetailPage = () => {
         <TextField
           select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e) => {
+            setTypeFilter(e.target.value);
+            setCurrentPage(0);
+          }}
           size="small"
           sx={{ minWidth: 140 }}
         >
           <MenuItem value="all">All Types</MenuItem>
-          <MenuItem value={EntryType.Note}>Note</MenuItem>
           <MenuItem value={EntryType.Link}>Link</MenuItem>
-          <MenuItem value={EntryType.Code}>Code</MenuItem>
-          <MenuItem value={EntryType.Task}>Task</MenuItem>
+          <MenuItem value={EntryType.Note}>Note</MenuItem>
+          <MenuItem value={EntryType.Setting}>Setting</MenuItem>
+          <MenuItem value={EntryType.Instruction}>Instruction</MenuItem>
         </TextField>
+
+        <Button
+          variant="outlined"
+          onClick={handleSearch}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          Search
+        </Button>
 
         <Button
           variant="contained"
@@ -332,41 +359,18 @@ export const ProjectDetailPage = () => {
         </Button>
       </Box>
 
-      {/* Entry Count */}
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Showing {filteredEntries.length} of {entries.length} entries
-      </Typography>
-
-      {/* Entries Grid */}
-      {entriesLoading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
-          <CircularProgress />
-        </Box>
-      ) : filteredEntries.length === 0 ? (
-        <Alert 
-          severity="info" 
-          sx={{ 
-            borderRadius: 2,
-            backgroundColor: 'background.paper',
-          }}
-        >
-          {entries.length === 0 
-            ? 'No entries found for this project. Click "Add Entry" to create one.'
-            : 'No entries match your search criteria. Try adjusting your filters.'}
-        </Alert>
-      ) : (
-        <Grid container spacing={2}>
-          {filteredEntries.map(entry => (
-            <Grid item xs={12} sm={6} md={4} key={entry.id}>
-              <EntryCard
-                entry={entry}
-                onEdit={handleEditEntry}
-                onDelete={handleDeleteEntry}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
+      {/* Entries Table */}
+      <EntriesTable
+        entries={entries}
+        totalCount={totalCount}
+        page={currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+        onEdit={handleEditEntry}
+        onDelete={handleDeleteEntry}
+        loading={entriesLoading}
+      />
 
       <EntryFormDialog
         open={isFormOpen}
