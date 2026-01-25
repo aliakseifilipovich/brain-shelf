@@ -187,8 +187,8 @@ export const EntriesPage = () => {
             <MenuItem value="all">All Types</MenuItem>
             <MenuItem value={EntryType.Link}>Link</MenuItem>
             <MenuItem value={EntryType.Note}>Note</MenuItem>
-            <MenuItem value={EntryType.Setting}>Setting</MenuItem>
-            <MenuItem value={EntryType.Instruction}>Instruction</MenuItem>
+            <MenuItem value={EntryType.Code}>Code</MenuItem>
+            <MenuItem value={EntryType.Task}>Task</MenuItem>
           </TextField>
           <Button
             variant="outlined"
@@ -210,6 +210,7 @@ export const EntriesPage = () => {
           onDelete={handleDeleteClick}
           loading={loading}
         />
+      </Box>
     </Container>
   );
 };

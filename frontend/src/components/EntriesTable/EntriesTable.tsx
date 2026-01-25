@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -38,9 +38,9 @@ const getTypeColor = (type: EntryType): string => {
       return '#3B82F6'; // Blue
     case EntryType.Note:
       return '#10B981'; // Green
-    case EntryType.Setting:
+    case EntryType.Code:
       return '#F59E0B'; // Amber
-    case EntryType.Instruction:
+    case EntryType.Task:
       return '#8B5CF6'; // Purple
     default:
       return '#6B7280'; // Gray
@@ -53,10 +53,10 @@ const getTypeLabel = (type: EntryType): string => {
       return 'Link';
     case EntryType.Note:
       return 'Note';
-    case EntryType.Setting:
-      return 'Setting';
-    case EntryType.Instruction:
-      return 'Instruction';
+    case EntryType.Code:
+      return 'Code';
+    case EntryType.Task:
+      return 'Task';
     default:
       return 'Unknown';
   }
