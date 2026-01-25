@@ -80,11 +80,11 @@ export const EntriesPage = () => {
         await dispatch(updateEntry({ id: selectedEntry.id, data: entryData })).unwrap();
         dispatch(showSnackbar({ message: 'Entry updated successfully', severity: 'success' }));
       } else {
-      fetchEntriesData(
-      if (typeFilter !== 'all') {
-        params.type = Number(typeFilter);
+        await dispatch(createEntry(entryData)).unwrap();
+        dispatch(showSnackbar({ message: 'Entry created successfully', severity: 'success' }));
       }
-      dispatch(fetchEntries(params));
+      setIsFormOpen(false);
+      fetchEntriesData();
     } catch (error) {
       dispatch(
         showSnackbar({
@@ -93,6 +93,7 @@ export const EntriesPage = () => {
         })
       );
     }
+  };
   };
 
   const handleDeleteConfirm = async () => {
