@@ -15,7 +15,7 @@ Brain Shelf is a centralized storage application for organizing and managing use
 - **Entry Types**:
   - 🔗 Links (with automatic metadata extraction)
   - 📝 Notes
-  - ⚙️ Settings
+  - 💻 Code
   - 📋 Instructions
 
 ## Technology Stack
