@@ -10,11 +10,14 @@ export interface Project {
 export interface Entry {
   id: number;
   projectId: number;
+  projectName?: string;
   title: string;
+  description?: string;
   content?: string;
   url?: string;
   type: EntryType;
   tags?: string[];
+  tagNames?: string[];
   metadataId?: number;
   metadata?: Metadata;
   createdAt: string;
