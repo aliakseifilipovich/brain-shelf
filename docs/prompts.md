@@ -18,6 +18,6 @@ This file contains the history of all prompts used during the development of Bra
 
 7. Please implement the issue 6,7,8,9,10 and create the new PR with implementation, check that everything works as expected before creating PR, if you will need to clarify something please ask me before proceed. Please add this promt to a history as previous. [User provided clarifications: Issue #6 (Full-Text Search) - SKIP for now, will be implemented later, Question 2 (Autocomplete) - Use easiest approach for now, Question 3 (Search highlighting) - Yes to highlighting, UI Component Library - Material-UI (MUI), State Management - Redux Toolkit, Styling - CSS Modules, PR Strategy - Individual PRs for each issue (#7, #8, #9, #10)]
 
-8. go [Continued with Issue #8 - Projects Management UI]
+8. go [Continuing with Issue #8 implementation after Issue #7 PR #25 was created]
 
 9. go [Continued with Issue #9 - Entries Management UI]
