@@ -37,6 +37,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IEntryService, EntryService>();
 builder.Services.AddScoped<IMetadataExtractionService, MetadataExtractionService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 // Register HttpClient for metadata extraction
 builder.Services.AddHttpClient();
