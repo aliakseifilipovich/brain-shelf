@@ -1,7 +1,9 @@
 using BrainShelf.Core.Entities;
 using BrainShelf.Infrastructure.Data;
 using BrainShelf.Services;
+using BrainShelf.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace BrainShelf.Tests.Services;
 
@@ -11,6 +13,7 @@ public class EntryServiceTests
     private ApplicationDbContext _context = null!;
     private EntryService _service = null!;
     private Project _testProject = null!;
+    private Mock<IMetadataExtractionService> _mockMetadataService = null!;
 
     [SetUp]
     public void Setup()
@@ -20,7 +23,8 @@ public class EntryServiceTests
             .Options;
 
         _context = new ApplicationDbContext(options);
-        _service = new EntryService(_context);
+        _mockMetadataService = new Mock<IMetadataExtractionService>();
+        _service = new EntryService(_context, _mockMetadataService.Object);
 
         // Create test project
         _testProject = new Project
@@ -65,7 +69,7 @@ public class EntryServiceTests
         var (entries, totalCount) = await _service.GetAllAsync(null, null, null, 1, 20);
 
         // Assert
-        Assert.That(entries, Has.Count.EqualTo(2));
+        Assert.That(entries.Count(), Is.EqualTo(2));
         Assert.That(totalCount, Is.EqualTo(2));
     }
 
@@ -86,7 +90,7 @@ public class EntryServiceTests
         var (entries, totalCount) = await _service.GetAllAsync(_testProject.Id, null, null, 1, 20);
 
         // Assert
-        Assert.That(entries, Has.Count.EqualTo(1));
+        Assert.That(entries.Count(), Is.EqualTo(1));
         Assert.That(entries.First().ProjectId, Is.EqualTo(_testProject.Id));
         Assert.That(totalCount, Is.EqualTo(1));
     }
@@ -104,7 +108,7 @@ public class EntryServiceTests
         var (entries, totalCount) = await _service.GetAllAsync(null, EntryType.Note, null, 1, 20);
 
         // Assert
-        Assert.That(entries, Has.Count.EqualTo(1));
+        Assert.That(entries.Count(), Is.EqualTo(1));
         Assert.That(entries.First().Type, Is.EqualTo(EntryType.Note));
         Assert.That(totalCount, Is.EqualTo(1));
     }
@@ -158,7 +162,7 @@ public class EntryServiceTests
         var (entries, totalCount) = await _service.GetAllAsync(null, null, null, 2, 10);
 
         // Assert
-        Assert.That(entries, Has.Count.EqualTo(10));
+        Assert.That(entries.Count(), Is.EqualTo(10));
         Assert.That(totalCount, Is.EqualTo(25));
     }
 
@@ -182,7 +186,7 @@ public class EntryServiceTests
         var (entries, totalCount) = await _service.GetAllAsync(null, null, null, 1, 200);
 
         // Assert
-        Assert.That(entries, Has.Count.EqualTo(100));
+        Assert.That(entries.Count(), Is.EqualTo(100));
         Assert.That(totalCount, Is.EqualTo(150));
     }
 
@@ -203,7 +207,7 @@ public class EntryServiceTests
         var (entries, totalCount) = await _service.GetByProjectIdAsync(_testProject.Id, 1, 20);
 
         // Assert
-        Assert.That(entries, Has.Count.EqualTo(1));
+        Assert.That(entries.Count(), Is.EqualTo(1));
         Assert.That(entries.First().ProjectId, Is.EqualTo(_testProject.Id));
         Assert.That(totalCount, Is.EqualTo(1));
     }
