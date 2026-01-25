@@ -80,8 +80,16 @@ export const EntriesPage = () => {
         await dispatch(updateEntry({ id: selectedEntry.id, data: entryData })).unwrap();
         dispatch(showSnackbar({ message: 'Entry updated successfully', severity: 'success' }));
       } else {
-        await dispatch(createEntry(entryData)).unwrap();
+        const result = await dispatch(createEntry(entryData)).unwrap();
         dispatch(showSnackbar({ message: 'Entry created successfully', severity: 'success' }));
+        
+        // For Link entries, metadata is extracted asynchronously
+        // Refetch after a short delay to show extracted content
+        if (entryData.type === EntryType.Link) {
+          setTimeout(() => {
+            fetchEntriesData();
+          }, 3000); // Wait 3 seconds for metadata extraction
+        }
       }
       setIsFormOpen(false);
       fetchEntriesData();

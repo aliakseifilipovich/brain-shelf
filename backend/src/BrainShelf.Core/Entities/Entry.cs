@@ -1,7 +1,7 @@
 namespace BrainShelf.Core.Entities;
 
 /// <summary>
-/// Represents an entry (link, note, setting, or instruction) in the system
+/// Represents an entry (link, note, code snippet, or task) in the system
 /// </summary>
 public class Entry : BaseEntity
 {
@@ -23,8 +23,8 @@ public class Entry : BaseEntity
 /// </summary>
 public enum EntryType
 {
-    Link = 0,
-    Note = 1,
-    Setting = 2,
-    Instruction = 3
+    Note = 0,
+    Link = 1,
+    Code = 2,
+    Task = 3
 }

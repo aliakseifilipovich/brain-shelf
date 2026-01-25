@@ -88,9 +88,7 @@ const EntryFormDialog: React.FC<EntryFormDialogProps> = ({
           newErrors.url = 'Please enter a valid URL';
         }
       }
-      if (!content.trim()) {
-        newErrors.content = 'Content is required for link entries';
-      }
+      // Content is optional for links - will be auto-extracted from URL
     }
 
     if (type === EntryType.Note || type === EntryType.Code || type === EntryType.Task) {
@@ -181,19 +179,24 @@ const EntryFormDialog: React.FC<EntryFormDialogProps> = ({
           <TextField
             label="Project"
             select
-            value={selectedProjectId || ''}
+            value={projects.length > 0 && selectedProjectId ? selectedProjectId : ''}
             onChange={(e) => setSelectedProjectId(e.target.value)}
             error={!!errors.projectId}
             helperText={errors.projectId || 'Select a project for this entry'}
             fullWidth
             size="small"
             required
+            disabled={projects.length === 0}
           >
-            {projects.map((project) => (
-              <MenuItem key={project.id} value={project.id}>
-                {project.name}
-              </MenuItem>
-            ))}
+            {projects.length === 0 ? (
+              <MenuItem value="">Loading projects...</MenuItem>
+            ) : (
+              projects.map((project) => (
+                <MenuItem key={project.id} value={project.id}>
+                  {project.name}
+                </MenuItem>
+              ))
+            )}
           </TextField>
 
           <TextField

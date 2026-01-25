@@ -52,3 +52,26 @@ This file contains the history of all prompts used during the development of Bra
 
 24. Create PR with bugs fixes and update promts.md, but summurize my promts where we fixes bugs
 
+25. please mount it I would like take a look
+
+26. I don't see the changes (modern UI from PR #37)
+
+27. design the same
+
+28. please generate 100 entities for Test Project
+
+29. Ok, now please implement paging for the entries and I would like to see it in table view, create pr after implementation, if u need any clarification please ask me
+
+30. Clarifications: 1. both (ProjectDetailPage and EntriesPage), 2. all (columns), 3. 20 (rows per page), 4. up to u, 5. server-side (pagination)
+
+31-36. Multiple syntax error fixes in EntriesPage.tsx (JSX corruption, missing braces, duplicate content)
+
+37. please check before commit somethins!!! a lot of errors
+
+38. Multiple JSX structure and enum value fixes
+
+39. Read my task and if i skipped something do it GitHub Copilot - Practical Task (task requirements provided)
+
+40. doen't need admin loyaut skip it. Promts in promts.md file
+
+41. I already have md file with promts!

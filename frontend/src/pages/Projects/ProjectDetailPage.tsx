@@ -101,21 +101,28 @@ export const ProjectDetailPage = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = async (data: any): Promise<void> => {
     const action = selectedEntry
       ? dispatch(updateEntry({ id: selectedEntry.id, data }))
       : dispatch(createEntry(data));
 
-    action
-      .unwrap()
-      .then(() => {
-        setIsFormOpen(false);
-        setSelectedEntry(null);
-        fetchEntriesData();
-      })
-      .catch((err) => {
-        console.error('Failed to save entry:', err);
-      });
+    try {
+      await action.unwrap();
+      setIsFormOpen(false);
+      setSelectedEntry(null);
+      fetchEntriesData();
+      
+      // For Link entries, metadata is extracted asynchronously
+      // Refetch after a short delay to show extracted content
+      if (!selectedEntry && data.type === EntryType.Link) {
+        setTimeout(() => {
+          fetchEntriesData();
+        }, 3000); // Wait 3 seconds for metadata extraction
+      }
+    } catch (err) {
+      console.error('Failed to save entry:', err);
+      throw err;
+    }
   };
 
   const handleDeleteConfirm = () => {
