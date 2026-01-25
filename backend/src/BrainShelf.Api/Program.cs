@@ -38,6 +38,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IEntryService, EntryService>();
 builder.Services.AddScoped<IMetadataExtractionService, MetadataExtractionService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
 
 // Register HttpClient for metadata extraction
@@ -84,3 +85,6 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.Run();
+
+// Make the implicit Program class public for testing
+public partial class Program { }
