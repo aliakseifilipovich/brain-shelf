@@ -10,6 +10,7 @@ import { ProjectDetailPage } from '@pages/Projects/ProjectDetailPage';
 import { EntriesPage } from '@pages/Entries/EntriesPage';
 import { EntryDetailPage } from '@pages/Entries/EntryDetailPage';
 import { SearchPage } from '@pages/Search/SearchPage';
+import TagManagement from './pages/TagManagement';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/entries" element={<EntriesPage />} />
               <Route path="/entries/:id" element={<EntryDetailPage />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/tags" element={<TagManagement />} />
             </Routes>
           </MainLayout>
         </Router>
