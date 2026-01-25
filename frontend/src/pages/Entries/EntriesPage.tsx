@@ -94,7 +94,6 @@ export const EntriesPage = () => {
       );
     }
   };
-  };
 
   const handleDeleteConfirm = async () => {
     if (!selectedEntry) return;
@@ -103,17 +102,6 @@ export const EntriesPage = () => {
       await dispatch(deleteEntry(selectedEntry.id)).unwrap();
       dispatch(showSnackbar({ message: 'Entry deleted successfully', severity: 'success' }));
       setIsDeleteDialogOpen(false);
-      // Refresh the entries list
-      const params: any = {
-        pageNumber: page,
-        pageSize: 20,
-      };
-      if (searchQuery) {
-        params.searchQuery = searchQuery;
-      }
-      if (typeFilter !== 'all') {
-        params.type = Number(typeFilter);
-      }
       fetchEntriesData();
     } catch (error) {
       dispatch(showSnackbar({ message: 'Failed to delete entry', severity: 'error' }));
