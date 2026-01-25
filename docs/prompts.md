@@ -21,3 +21,7 @@ This file contains the history of all prompts used during the development of Bra
 8. go [Continuing with Issue #8 implementation after Issue #7 PR #25 was created]
 
 9. go [Continued with Issue #9 - Entries Management UI]
+
+10. Let's continue with issue 6 [Implementing Full-Text Search backend - PostgreSQL FTS with tsvector/tsquery, multilingual support for English and Russian, GIN indexes, search across Entries, Metadata, and Tags with filtering and pagination]
+
+11. We can continue with issue-10 [Implementing Search Interface frontend - Search page with debounced input, autocomplete from history, advanced filters (project, type, date range), result highlighting, pagination, empty states, and search history persistence in localStorage]

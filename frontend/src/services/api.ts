@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { Project, Entry, PaginatedResponse, ApiError } from '../types/models';
+import { Project, Entry, PaginatedResponse, ApiError, EntryType } from '../types/models';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -81,6 +81,19 @@ export const entriesApi = {
   delete: (id: number) => apiClient.delete(`/entries/${id}`),
 
   extractMetadata: (id: number) => apiClient.post<Entry>(`/entries/${id}/extract-metadata`),
+};
+
+// Search API
+export const searchApi = {
+  search: (params: {
+    q?: string;
+    projectId?: number;
+    type?: EntryType;
+    fromDate?: string;
+    toDate?: string;
+    pageNumber?: number;
+    pageSize?: number;
+  }) => apiClient.get<PaginatedResponse<Entry>>('/search', { params }),
 };
 
 export default apiClient;
