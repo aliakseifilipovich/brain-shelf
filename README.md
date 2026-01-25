@@ -40,7 +40,7 @@ Brain Shelf is a centralized storage application for organizing and managing use
 - Docker and Docker Compose installed
 - Git
 
-### Quick Start
+### Quick Start (Development)
 
 1. **Clone the repository**
    ```bash
@@ -67,6 +67,32 @@ Brain Shelf is a centralized storage application for organizing and managing use
    ```bash
    docker-compose down
    ```
+
+### Production Deployment
+
+For production environments, Brain Shelf provides optimized Docker configurations with:
+- Multi-stage builds for smaller images
+- Nginx reverse proxy with caching and compression
+- Health checks and resource limits
+- Automated backup and restore scripts
+- Comprehensive monitoring and logging
+
+See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed production setup instructions.
+
+**Quick Production Start**:
+```bash
+# Copy environment template
+cp .env.prod.example .env.prod
+
+# Edit .env.prod with your configuration
+nano .env.prod
+
+# Start production services
+docker-compose -f docker-compose.prod.yml up -d
+
+# Verify health
+curl http://localhost/health
+```
 
 ### Development Setup
 

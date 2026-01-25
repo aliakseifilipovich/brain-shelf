@@ -121,8 +121,10 @@ frontend/*.sln
 .env
 .env.local
 .env.*.local
+.env.prod
 *.env
 !.env.example
+!.env.prod.example
 
 # Database
 *.db
@@ -169,6 +171,7 @@ out/
 *.bak
 *.backup
 *~
+backups/
 
 # IDE - VSCode
 .vscode/*
