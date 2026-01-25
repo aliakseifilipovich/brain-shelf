@@ -138,15 +138,35 @@ export const EntriesPage = () => {
 
   const handleRowsPerPageChange = (newRowsPerPage: number) => {
     setRowsPerPage(newRowsPerPage);
-    setCurrentPage(0
+    setCurrentPage(0);
+  };
+
+  return (
+    <Container maxWidth="lg">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+          <Typography variant="h4" component="h1">
+            Entries
+          </Typography>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreateClick}>
+            New Entry
           </Button>
         </Box>
 
-        <Box display="flex" gap={2} mb={3}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2, 
+          mb: 3,
+          backgroundColor: 'background.paper',
+          p: 2,
+          borderRadius: 1,
+          border: 1,
+          borderColor: 'divider'
+        }}>
           <TextField
             placeholder="Search entries..."
             value={searchQuery}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchQuery(e.target.value)}
             size="small"
             sx={{ flexGrow: 1 }}
           />
