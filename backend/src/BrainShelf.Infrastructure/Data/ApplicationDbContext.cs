@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Entry> Entries => Set<Entry>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Metadata> Metadata => Set<Metadata>();
+    public DbSet<Template> Templates => Set<Template>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -91,6 +92,31 @@ public class ApplicationDbContext : DbContext
 
             // Create index on EntryId for efficient lookups
             entity.HasIndex(e => e.EntryId).IsUnique();
+        });
+
+        // Configure Template entity
+        modelBuilder.Entity<Template>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Type).IsRequired();
+            entity.Property(e => e.Title).HasMaxLength(500);
+            entity.Property(e => e.Content).HasMaxLength(10000);
+            entity.Property(e => e.IsDefault).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+            
+            entity.Property(e => e.Tags)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+                );
+                
+            entity.HasOne(e => e.Project)
+                  .WithMany()
+                  .HasForeignKey(e => e.ProjectId)
+                  .OnDelete(DeleteBehavior.SetNull);
         });
     }
 

@@ -367,4 +367,96 @@ public class EntriesController : ControllerBase
             UpdatedAt = entry.UpdatedAt
         };
     }
+
+    /// <summary>
+    /// Duplicate an entry
+    /// </summary>
+    [HttpPost("{id}/duplicate")]
+    public async Task<ActionResult<EntryDto>> Duplicate(Guid id, [FromBody] DuplicateEntryDto? duplicateDto = null)
+    {
+        var entry = await _entryService.GetByIdAsync(id);
+        if (entry == null)
+        {
+            return NotFound(new { message = $"Entry with ID {id} not found" });
+        }
+
+        var newEntry = new Entry
+        {
+            ProjectId = entry.ProjectId,
+            Title = duplicateDto?.NewTitle ?? $"{entry.Title} (Copy)",
+            Description = entry.Description,
+            Type = entry.Type,
+            Url = entry.Url,
+            Content = entry.Content
+        };
+
+        var tagNames = entry.Tags.Select(t => t.Name).ToList();
+        var createdEntry = await _entryService.CreateAsync(newEntry, tagNames);
+
+        return Ok(MapToDto(createdEntry));
+    }
+
+    /// <summary>
+    /// Bulk delete entries
+    /// </summary>
+    [HttpPost("bulk-delete")]
+    public async Task<ActionResult> BulkDelete([FromBody] BulkDeleteDto bulkDeleteDto)
+    {
+        var deletedCount = 0;
+        var errors = new List<string>();
+
+        foreach (var entryId in bulkDeleteDto.EntryIds)
+        {
+            try
+            {
+                await _entryService.DeleteAsync(entryId);
+                deletedCount++;
+            }
+            catch (KeyNotFoundException)
+            {
+                errors.Add($"Entry {entryId} not found");
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Failed to delete entry {entryId}: {ex.Message}");
+            }
+        }
+
+        return Ok(new { deletedCount, totalRequested = bulkDeleteDto.EntryIds.Count, errors });
+    }
+
+    /// <summary>
+    /// Bulk add tags to entries
+    /// </summary>
+    [HttpPost("bulk-tag")]
+    public async Task<ActionResult> BulkTag([FromBody] BulkTagDto bulkTagDto)
+    {
+        var updatedCount = 0;
+        var errors = new List<string>();
+
+        foreach (var entryId in bulkTagDto.EntryIds)
+        {
+            try
+            {
+                var entry = await _entryService.GetByIdAsync(entryId);
+                if (entry == null)
+                {
+                    errors.Add($"Entry {entryId} not found");
+                    continue;
+                }
+
+                var existingTags = entry.Tags.Select(t => t.Name).ToList();
+                var newTags = existingTags.Union(bulkTagDto.Tags).ToList();
+
+                await _entryService.UpdateAsync(entryId, entry, newTags);
+                updatedCount++;
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Failed to update entry {entryId}: {ex.Message}");
+            }
+        }
+
+        return Ok(new { updatedCount, totalRequested = bulkTagDto.EntryIds.Count, errors });
+    }
 }
