@@ -39,6 +39,7 @@ builder.Services.AddScoped<IEntryService, EntryService>();
 builder.Services.AddScoped<IMetadataExtractionService, MetadataExtractionService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<ITemplateService, TemplateService>();
 
 // Register HttpClient for metadata extraction
 builder.Services.AddHttpClient();
