@@ -155,31 +155,6 @@ export const EntriesPage = () => {
             placeholder="Search entries..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            size="small"
-            sx={{ flexGrow: 1 }}
-          />
-          <TextField
-            select
-            label="Type"
-            value={typeFilter}
-            onChange={handleTypeFilterChange}
-            size="small"
-            sx={{ minWidth: 150 }}
-          >
-            <sx={{ 
-          display: 'flex', 
-          gap: 2, 
-          mb: 3,
-          backgroundColor: 'background.paper',
-          p: 2,
-          borderRadius: 1,
-          border: 1,
-          borderColor: 'divider'
-        }}>
-          <TextField
-            placeholder="Search entries..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             size="small"
             sx={{ flexGrow: 1 }}
