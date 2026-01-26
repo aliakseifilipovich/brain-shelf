@@ -52,13 +52,13 @@ Brain Shelf is a centralized storage application for organizing and managing use
    
    This command will:
    - Start PostgreSQL database on port 5432
-   - Build and start the .NET backend API on port 5000
+   - Build and start the .NET backend API on port 5001
    - Build and start the React frontend on port 3000
 
 3. **Access the application**
    - **Frontend**: http://localhost:3000
-   - **Backend API**: http://localhost:5000/api/health
-   - **Swagger Documentation**: http://localhost:5000/swagger
+   - **Backend API**: http://localhost:5001/api/health
+   - **Swagger Documentation**: http://localhost:5001/swagger
 
 4. **Stop the application**
    ```bash
@@ -103,7 +103,7 @@ dotnet restore
 dotnet run
 ```
 
-The API will be available at http://localhost:5000
+The API will be available at http://localhost:5001
 
 #### Running Frontend Locally (without Docker)
 
