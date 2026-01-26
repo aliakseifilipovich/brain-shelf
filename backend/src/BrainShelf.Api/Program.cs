@@ -65,6 +65,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Apply migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline
 // Add global exception handler middleware first
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
