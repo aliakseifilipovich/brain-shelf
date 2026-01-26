@@ -54,9 +54,6 @@ services:
       - backend
     networks:
       - brainshelf-network
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     restart: unless-stopped
 
 volumes:
